@@ -24,6 +24,9 @@ import java.util.Objects;
  * Created by pettyurin on 30/10/2014.
  */
 public class AsyncHttpPost extends AsyncTask<Object, String, String> {
+
+    public AsyncResponse delegate=null;
+
     @Override
     protected String doInBackground(Object... params) {
         HttpClient httpclient = new DefaultHttpClient();
@@ -50,7 +53,7 @@ public class AsyncHttpPost extends AsyncTask<Object, String, String> {
             }
         } catch (ClientProtocolException e) {
             e.printStackTrace();
-            //TODO Handle problems..
+            //TODO Handle problems.. or meh...
         } catch (IOException e) {
             e.printStackTrace();
             //TODO Handle problems..
@@ -62,5 +65,7 @@ public class AsyncHttpPost extends AsyncTask<Object, String, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         //Do anything with response..
+        delegate.processFinish(result);
     }
 }
+
