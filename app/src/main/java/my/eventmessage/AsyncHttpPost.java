@@ -33,11 +33,6 @@ public class AsyncHttpPost extends AsyncTask<Object, String, String> {
             HttpPost post = new HttpPost((String)params[0]);
             // Add your data
             List<NameValuePair> nameValuePairs = (List<NameValuePair>)params[1];
-//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//            nameValuePairs.add(new BasicNameValuePair("event", "Potato"));
-//            nameValuePairs.add(new BasicNameValuePair("lat", "666"));
-//            nameValuePairs.add(new BasicNameValuePair("lon", "999"));
-//            nameValuePairs.add(new BasicNameValuePair("dist", "42"));
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             response = httpclient.execute(post);
