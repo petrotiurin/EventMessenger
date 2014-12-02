@@ -35,7 +35,7 @@ public class SendMessageListener implements View.OnKeyListener {
                 //TODO: test
                 List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
                 nameValuePairs.add(new BasicNameValuePair("message", "" + inputText));
-                currentTask = new AsyncHttpPost().execute("http://YOUR.WEBSITE.HERE", nameValuePairs);
+                //currentTask = new AsyncHttpPost().execute("http://coral-lightning-739.appspot.com/", nameValuePairs);
             } else {
                 Toast.makeText(ma, "Message delivery failed. Away from any event.",
                                Toast.LENGTH_SHORT).show();

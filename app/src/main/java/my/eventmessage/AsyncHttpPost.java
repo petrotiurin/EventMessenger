@@ -49,6 +49,7 @@ public class AsyncHttpPost extends AsyncTask<Object, String, String> {
             } else{
                 //Closes the connection.
                 response.getEntity().getContent().close();
+                Log.d("status",""+ statusLine.getStatusCode());
                 throw new IOException(statusLine.getReasonPhrase());
             }
         } catch (ClientProtocolException e) {

@@ -78,6 +78,7 @@ public class MainActivity extends Activity implements
         SendMessageListener sl = new SendMessageListener();
         sl.adapter = adapter;
         sl.editText = editText1;
+        sl.ma = this;
         editText1.setOnKeyListener(sl);
         // Dummy messages for debugging the layout
         adapter.add(new Message(false, "potato"));
@@ -181,7 +182,9 @@ public class MainActivity extends Activity implements
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("lat", ""+location.getLatitude()));
         nameValuePairs.add(new BasicNameValuePair("lon", ""+location.getLongitude()));
-        currentTask = new AsyncHttpPost().execute("http://YOUR.WEBSITE.HERE", nameValuePairs);
+        AsyncHttpPost post = new AsyncHttpPost();
+        post.delegate = this;
+        post.execute("http://coral-lightning-739.appspot.com/check", nameValuePairs);
     }
 
     // Receive the response from the server to see if there's an event nearby
