@@ -126,12 +126,13 @@ public class MainActivity extends Activity implements
             mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
             mLocationClient = new LocationClient(this, this, this);
 
-            gcm = GoogleCloudMessaging.getInstance(this);
-            regid = getRegistrationId(context);
-
-            if (regid.isEmpty()) {
-                registerInBackground();
-            }
+//            gcm = GoogleCloudMessaging.getInstance(this);
+//            regid = getRegistrationId(context);
+//
+//            if (regid.isEmpty()) {
+//                registerInBackground();
+//            }
+            new GcmRegistrationAsyncTask(this).execute();
 
         } else {
             Log.e("PlayServices", "GooglePlayServices are not available.");
