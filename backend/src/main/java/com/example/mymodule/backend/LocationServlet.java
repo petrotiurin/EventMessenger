@@ -40,7 +40,7 @@ public class LocationServlet extends HttpServlet {
             Double dist = distanceOnUnitSphere(latitude, longitude,
                                                eventLat, eventLon);
             if (dist <= eventDist) {
-                responseString(response, (String) result.getProperty("name"));
+                responseString(response, (String) result.getProperty("name") + " Event found!");
 //                responseString(response, ""+dist);
             }
             else responseString(response, "Away from any event.");

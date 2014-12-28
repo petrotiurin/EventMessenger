@@ -37,7 +37,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
                     new AndroidJsonFactory(), null)
                     // Need setRootUrl and setGoogleClientRequestInitializer only for local testing,
                     // otherwise they can be skipped
-                    .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                    .setRootUrl("https://coral-lightning-739.appspot.com/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
                         @Override
                         public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest)

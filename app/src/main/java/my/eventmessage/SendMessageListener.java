@@ -42,8 +42,9 @@ public class SendMessageListener implements View.OnKeyListener {
                             return "";
                         }
                     } else {
-                        Toast.makeText(ma, "Message delivery failed. Away from any event.",
-                                Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(ma, "Message delivery failed. Away from any event.",
+//                                Toast.LENGTH_SHORT).show();
+                        Log.d("DEBUG", "Message delivery failed. Away from any event.");
                         return "";
                     }
                 }

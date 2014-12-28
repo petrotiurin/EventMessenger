@@ -18,7 +18,7 @@ import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 public class GcmBroadcastReceiver extends BroadcastReceiver {
 
-    public DiscussArrayAdapter adapter;
+    public static DiscussArrayAdapter adapter;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -26,18 +26,9 @@ public class GcmBroadcastReceiver extends BroadcastReceiver {
 
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
         String messageType = gcm.getMessageType(intent);
-        adapter.add(new Message(true, extras.getString("message")));
-        Log.d("TYPE", messageType);
-        if (!extras.isEmpty() && !messageType.equals("send_event")) {
-            for (int i = 0; i < 5; i++) {
-                Log.i("Receive", "Working... " + (i + 1)
-                        + "/5 @ " + SystemClock.elapsedRealtime());
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                }
-            }
-            Log.d("RECEIVED", extras.getString("r"));
+        if (messageType == "gcm") {
+            adapter.add(new Message(true, extras.getString("message")));
+            Log.d("MSG", extras.getString("message"));
         }
     }
 }

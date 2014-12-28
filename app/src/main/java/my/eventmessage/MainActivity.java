@@ -101,6 +101,7 @@ public class MainActivity extends Activity implements
         lv = (ListView) findViewById(R.id.listView1);
         adapter = new DiscussArrayAdapter(getApplicationContext(), R.layout.listitem);
         lv.setAdapter(adapter);
+        GcmBroadcastReceiver.adapter = adapter;
 
         editText1 = (EditText) findViewById(R.id.editText1);
 
@@ -110,12 +111,12 @@ public class MainActivity extends Activity implements
         sl.editText = editText1;
         sl.ma = this;
         editText1.setOnKeyListener(sl);
-        // Dummy messages for debugging the layout
-        adapter.add(new Message(false, "potato"));
-        adapter.add(new Message(true, "tomato"));
-        for (int i = 0; i < 20; i++) {
-            adapter.add(new Message(true, "test"));
-        }
+//        // Dummy messages for debugging the layout
+//        adapter.add(new Message(false, "potato"));
+//        adapter.add(new Message(true, "tomato"));
+//        for (int i = 0; i < 20; i++) {
+//            adapter.add(new Message(true, "test"));
+//        }
         // Check if play services are enabled
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode == ConnectionResult.SUCCESS){
@@ -126,12 +127,12 @@ public class MainActivity extends Activity implements
             mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
             mLocationClient = new LocationClient(this, this, this);
 
-//            gcm = GoogleCloudMessaging.getInstance(this);
-//            regid = getRegistrationId(context);
-//
-//            if (regid.isEmpty()) {
-//                registerInBackground();
-//            }
+            gcm = GoogleCloudMessaging.getInstance(this);
+            regid = getRegistrationId(context);
+
+            if (regid.isEmpty()) {
+                registerInBackground();
+            }
             new GcmRegistrationAsyncTask(this).execute();
 
         } else {
@@ -218,12 +219,12 @@ public class MainActivity extends Activity implements
 //        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 //        // Send the updated location to the server
 //        //TODO: test
-//        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//        nameValuePairs.add(new BasicNameValuePair("lat", ""+location.getLatitude()));
-//        nameValuePairs.add(new BasicNameValuePair("lon", ""+location.getLongitude()));
-//        AsyncHttpPost post = new AsyncHttpPost();
-//        post.delegate = this;
-//        post.execute("http://coral-lightning-739.appspot.com/check", nameValuePairs);
+        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+        nameValuePairs.add(new BasicNameValuePair("lat", ""+location.getLatitude()));
+        nameValuePairs.add(new BasicNameValuePair("lon", ""+location.getLongitude()));
+        AsyncHttpPost post = new AsyncHttpPost();
+        post.delegate = this;
+        post.execute("http://coral-lightning-739.appspot.com/check", nameValuePairs);
     }
 
     // Receive the response from the server to see if there's an event nearby
