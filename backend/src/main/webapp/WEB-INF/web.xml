@@ -43,6 +43,16 @@
         <url-pattern>/check</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>MessagingServlet</servlet-name>
+        <servlet-class>com.example.mymodule.backend.MessagingServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>MessagingServlet</servlet-name>
+        <url-pattern>/message</url-pattern>
+    </servlet-mapping>
+
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>

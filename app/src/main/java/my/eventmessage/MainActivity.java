@@ -111,6 +111,10 @@ public class MainActivity extends Activity implements
         sl.editText = editText1;
         sl.ma = this;
         editText1.setOnKeyListener(sl);
+        adapter.add(new Message(false, "Come to the stall no.1 everyone, we have great burgers!"));
+        adapter.add(new Message(false, "Announcement: The entrances 1-10 experiencing large number of customers. Please use entrances 11-30. Thank you."));
+        adapter.add(new Message(true, "Has anyone found a blue jacket?!"));
+//        adapter.add(new Message(false, "I have a large penis. Ladies, come see me ;)"));
 //        // Dummy messages for debugging the layout
 //        adapter.add(new Message(false, "potato"));
 //        adapter.add(new Message(true, "tomato"));
