@@ -8,9 +8,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +41,41 @@ public class SendMessageListener implements View.OnKeyListener {
                 @Override
                 protected Object doInBackground(Object[] params) {
                     // Send message only if we're near some event
-                    if (ma.nearEvent) {
+                    if (true) {
                         String inputText = editText.getText().toString();
                         // Send the message to the server
-                        if (GCM_send(inputText)){
-                            Log.d("DEBUG", "Message sent");
-                            return inputText;
-                        } else {
-                            return "";
+                        HttpClient httpclient = new DefaultHttpClient();
+                        HttpResponse response;
+                        String responseString = null;
+                        try {
+                            HttpPost post = new HttpPost("http://CORAL-LIGHTNING-739.APPSPOT.COM/message");
+                            // Add your data
+                            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+                            nameValuePairs.add(new BasicNameValuePair("message", inputText));
+                            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+                            response = httpclient.execute(post);
+                            StatusLine statusLine = response.getStatusLine();
+                            if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+                                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                                response.getEntity().writeTo(out);
+                                out.close();
+                                responseString = out.toString();
+                                Log.d("HTTPLOG", responseString);
+                            } else{
+                                //Closes the connection.
+                                response.getEntity().getContent().close();
+                                Log.d("status",""+ statusLine.getStatusCode());
+                                throw new IOException(statusLine.getReasonPhrase());
+                            }
+                        } catch (ClientProtocolException e) {
+                            e.printStackTrace();
+                            //TODO Handle problems.. or meh...
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            //TODO Handle problems..
                         }
+                        return responseString;
                     } else {
 //                        Toast.makeText(ma, "Message delivery failed. Away from any event.",
 //                                Toast.LENGTH_SHORT).show();
@@ -51,11 +86,11 @@ public class SendMessageListener implements View.OnKeyListener {
 
                 @Override
                 protected void onPostExecute(Object text) {
-                    if (!((String)text).isEmpty()) {
+//                    if (!((String)text).isEmpty()) {
                         // Add the text to the list view
-                        adapter.add(new Message(false, (String)text));
+//                        adapter.add(new Message(false, (String)text));
                         editText.setText("");
-                    }
+//                    }
                 }
 
             }.execute(null, null, null);
