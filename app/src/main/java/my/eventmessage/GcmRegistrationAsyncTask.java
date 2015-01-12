@@ -23,7 +23,6 @@ class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
     private GoogleCloudMessaging gcm;
     private Context context;
 
-    // TODO: change to your own sender ID to Google Developers Console project number, as per instructions above
     private static final String SENDER_ID = "1032955860574";
 
     public GcmRegistrationAsyncTask(Context context) {
@@ -56,7 +55,7 @@ class GcmRegistrationAsyncTask extends AsyncTask<Context, Void, String> {
                 gcm = GoogleCloudMessaging.getInstance(context);
             }
             String regId = gcm.register(SENDER_ID);
-            msg = "Device registered, registration ID=" + regId;
+            msg = "Device registered";
 
             // You should send the registration ID to your server over HTTP,
             // so it can use GCM/HTTP or CCS to send messages to your app.

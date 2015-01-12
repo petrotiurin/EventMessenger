@@ -80,9 +80,7 @@ public class MainActivity extends Activity implements
     /*************** GCM ******************/
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
-    // Substitute you own sender ID here. This is the project number
     String SENDER_ID = "1032955860574";
-//    String SENDER_ID = "510592574634";
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
     SharedPreferences prefs;
@@ -111,16 +109,8 @@ public class MainActivity extends Activity implements
         sl.editText = editText1;
         sl.ma = this;
         editText1.setOnKeyListener(sl);
-        adapter.add(new Message(false, "Come to the stall no.1 everyone, we have great burgers!"));
-        adapter.add(new Message(false, "Announcement: The entrances 1-10 experiencing large number of customers. Please use entrances 11-30. Thank you."));
-        adapter.add(new Message(true, "Has anyone found a blue jacket?!"));
-//        adapter.add(new Message(false, "I have a large penis. Ladies, come see me ;)"));
-//        // Dummy messages for debugging the layout
-//        adapter.add(new Message(false, "potato"));
-//        adapter.add(new Message(true, "tomato"));
-//        for (int i = 0; i < 20; i++) {
-//            adapter.add(new Message(true, "test"));
-//        }
+//        adapter.add(new Message(false, "Come to the stall no.1 everyone, we have great burgers!"));
+
         // Check if play services are enabled
         int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (resultCode == ConnectionResult.SUCCESS){
@@ -143,12 +133,6 @@ public class MainActivity extends Activity implements
             Log.e("PlayServices", "GooglePlayServices are not available.");
             System.exit(0);
         }
-//        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//        nameValuePairs.add(new BasicNameValuePair("event", "Tomato"));
-//        nameValuePairs.add(new BasicNameValuePair("lat", "666"));
-//        nameValuePairs.add(new BasicNameValuePair("lon", "999"));
-//        nameValuePairs.add(new BasicNameValuePair("dist", "42"));
-//        AsyncTask at = new AsyncHttpPost().execute("http://CORAL-LIGHTNING-739.APPSPOT.COM", nameValuePairs);
     }
 
     @Override
@@ -216,13 +200,6 @@ public class MainActivity extends Activity implements
 
     @Override
     public void onLocationChanged(Location location) {
-        // Report to the UI that the location was updated
-        String msg = "Updated Location: " +
-                Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
-//        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-//        // Send the updated location to the server
-//        //TODO: test
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
         nameValuePairs.add(new BasicNameValuePair("lat", ""+location.getLatitude()));
         nameValuePairs.add(new BasicNameValuePair("lon", ""+location.getLongitude()));
@@ -251,16 +228,14 @@ public class MainActivity extends Activity implements
      * @return registration ID, or empty string if there is no existing
      *         registration ID.
      */
-    private String getRegistrationId(Context context) {
+    public String getRegistrationId(Context context) {
         final SharedPreferences prefs = getGCMPreferences(context);
         String registrationId = prefs.getString(PROPERTY_REG_ID, "");
         if (registrationId.isEmpty()) {
-            Log.i("Reg", "Registration not found    .");
+            Log.i("Reg", "Registration not found.");
             return "";
         }
-        Log.e("==========================","=========================");
-        Log.e("regid",registrationId);
-        Log.e("==========================","=========================");
+        Log.i("regid",registrationId);
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
@@ -287,7 +262,7 @@ public class MainActivity extends Activity implements
 //            return 1;
         } catch (PackageManager.NameNotFoundException e) {
             // should never happen
-            Log.d("Exception:", e.toString());
+            Log.e("Exception:", e.toString());
             throw new RuntimeException("Could not get package name: " + e);
         }
     }
@@ -302,19 +277,13 @@ public class MainActivity extends Activity implements
                         gcm = GoogleCloudMessaging.getInstance(context);
                     }
                     regid = gcm.register(SENDER_ID);
-                    msg = "Device registered, registration ID=" + regid;
-                    // You should send the registration ID to your server over HTTP, so it
-                    // can use GCM/HTTP or CCS to send messages to your app.
-                    sendRegistrationIdToBackend();
-
-                    // For this demo: we don't need to send it because the device will send
-                    // upstream messages to a server that echo back the message using the
-                    // 'from' address in the message.
+                    msg = "Device registered";
 
                     // Persist the regID - no need to register again.
                     storeRegistrationId(context, regid);
                 } catch (IOException ex) {
-                    msg = "Error :" + ex.getMessage();
+                    msg = "Error registering the device!";
+                    Log.e("Error", ex.getMessage());
                     // If there is an error, don't just keep trying to register.
                     // Require the user to click a button again, or perform
                     // exponential back-off.
@@ -329,32 +298,6 @@ public class MainActivity extends Activity implements
                 Logger.getLogger("REGISTRATION").log(Level.INFO, msg);
             }
         }.execute(null, null, null);
-    }
-
-    /**
-     * Sends the registration ID to your server over HTTP, so it can use GCM/HTTP
-     * or CCS to send messages to your app. Not needed for this demo since the
-     * device sends upstream messages to a server that echoes back the message
-     * using the 'from' address in the message.
-     */
-    private void sendRegistrationIdToBackend() throws IOException{
-        if (regService == null) {
-            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-                    .setRootUrl("https://coral-lightning-739.appspot.com/_ah/api/");
-//            end of optional local run code
-//            Registration.Builder builder = new Registration.Builder(AndroidHttp.newCompatibleTransport(), new AndroidJsonFactory(), null)
-//                    .setRootUrl("http://10.0.2.2:8080/_ah/api/") // 10.0.2.2 is localhost's IP address in Android emulator
-//                    .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-//                        @Override
-//                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-//                            abstractGoogleClientRequest.setDisableGZipContent(true);
-//                        }
-//                    });
-            regService = builder.build();
-        }
-        regService.register(regid).execute();
-        // Your implementation here.
-        Log.d("REGID", regid);
     }
 
     /**

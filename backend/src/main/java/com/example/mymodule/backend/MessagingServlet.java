@@ -32,19 +32,19 @@ public class MessagingServlet extends HttpServlet {
         sendMessage(msg);
     }
 
-    private void sendMessage(String message) throws IOException {
-        if(message == null || message.trim().length() == 0) {
+    private void sendMessage(String untrimmed_message) throws IOException {
+        if(untrimmed_message == null || untrimmed_message.trim().length() == 0) {
             log.warning("Not sending message because it is empty");
             return;
         }
-        // crop longer messages
-        if (message.length() > 1000) {
-            message = message.substring(0, 1000) + "[...]";
-        }
+        String[] s = untrimmed_message.split(":",2);
+        String regId = s[0];
+        String message = s[1];
         Sender sender = new Sender(API_KEY);
         Message msg = new Message.Builder().addData("message", message).build();
-        List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).limit(10).list();
+        List<RegistrationRecord> records = ofy().load().type(RegistrationRecord.class).list();
         for(RegistrationRecord record : records) {
+            if (record.getRegId().equals(regId)) continue;
             Result result = sender.send(msg, record.getRegId(), 5);
             if (result.getMessageId() != null) {
                 log.info("Message sent to " + record.getRegId());

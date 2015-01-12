@@ -41,17 +41,19 @@ public class SendMessageListener implements View.OnKeyListener {
                 @Override
                 protected Object doInBackground(Object[] params) {
                     // Send message only if we're near some event
-                    if (true) {
+                    if (ma.nearEvent) {
                         String inputText = editText.getText().toString();
                         // Send the message to the server
                         HttpClient httpclient = new DefaultHttpClient();
                         HttpResponse response;
                         String responseString = null;
+//                        String regid = ma.getRegistrationId(ma.context);
+                        String regid = ma.regid;
                         try {
                             HttpPost post = new HttpPost("http://CORAL-LIGHTNING-739.APPSPOT.COM/message");
                             // Add your data
                             List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-                            nameValuePairs.add(new BasicNameValuePair("message", inputText));
+                            nameValuePairs.add(new BasicNameValuePair("message", regid+":"+ inputText));
                             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
                             response = httpclient.execute(post);
@@ -75,10 +77,8 @@ public class SendMessageListener implements View.OnKeyListener {
                             e.printStackTrace();
                             //TODO Handle problems..
                         }
-                        return responseString;
+                        return inputText;
                     } else {
-//                        Toast.makeText(ma, "Message delivery failed. Away from any event.",
-//                                Toast.LENGTH_SHORT).show();
                         Log.d("DEBUG", "Message delivery failed. Away from any event.");
                         return "";
                     }
@@ -86,11 +86,11 @@ public class SendMessageListener implements View.OnKeyListener {
 
                 @Override
                 protected void onPostExecute(Object text) {
-//                    if (!((String)text).isEmpty()) {
+                    if (!((String)text).isEmpty()) {
                         // Add the text to the list view
-//                        adapter.add(new Message(false, (String)text));
+                        adapter.add(new Message(false, (String)text));
                         editText.setText("");
-//                    }
+                    }
                 }
 
             }.execute(null, null, null);
